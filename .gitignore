@@ -2683,3 +2683,4 @@ node_modules/prettier/plugins/yaml.js
 node_modules/prettier/plugins/yaml.mjs
 package-lock.json
 package.json
+node_modules/*
