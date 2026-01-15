@@ -1,4 +1,20 @@
 {% # theme-check-disable %}
+{% comment %} Custom font: Dwight {% endcomment %}
+<link
+  rel="preload"
+  as="font"
+  href="{{ 'Dwight-Regular.otf' | asset_url }}"
+  type="font/otf"
+  crossorigin
+>
+<link
+  rel="preload"
+  as="font"
+  href="{{ 'Dwight-Bold.otf' | asset_url }}"
+  type="font/otf"
+  crossorigin
+>
+
 {%- unless settings.type_body_font.system? -%}
   <link
     rel="preload"

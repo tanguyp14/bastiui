@@ -9,28 +9,64 @@ const scssSourceDir = './tylt/scss/';
 const outputFile = './tylt/scss/all.scss';
 const outputCssDir = './assets/';
 
-function generateImports(done) {
-    console.log('Début de la génération de _all.scss...');
-    fs.readdir(scssSourceDir, (err, files) => {
-        if (err) {
-            console.error('Erreur lors de la lecture du dossier scss :', err);
-            done(err);
-            return;
+// Ordre d'import des dossiers (base en premier pour les variables/fonts)
+const importOrder = ['base', 'layout', 'components'];
+
+function getAllScssFiles(dir, baseDir = dir) {
+    let results = [];
+    const files = fs.readdirSync(dir);
+
+    for (const file of files) {
+        const filePath = path.join(dir, file);
+        const stat = fs.statSync(filePath);
+
+        if (stat.isDirectory()) {
+            results = results.concat(getAllScssFiles(filePath, baseDir));
+        } else if (file.endsWith('.scss') && file !== 'all.scss') {
+            // Chemin relatif depuis le dossier scss
+            const relativePath = path.relative(baseDir, filePath);
+            results.push(relativePath);
         }
+    }
 
-        const scssFiles = files.filter(file => file.endsWith('.scss') && file !== path.basename(outputFile));
-        const importStatements = scssFiles.map(file => `@import '${file}';`).join('\n');
+    return results;
+}
 
-        fs.writeFile(outputFile, importStatements, (err) => {
-            if (err) {
-                console.error('Erreur lors de l\'écriture du fichier all.scss :', err);
-                done(err);
-                return;
-            }
-            console.log('Fichier _all.scss généré avec succès.');
-            done();
+function generateImports(done) {
+    console.log('Début de la génération de all.scss...');
+
+    try {
+        const allFiles = getAllScssFiles(scssSourceDir);
+
+        // Trier les fichiers selon l'ordre des dossiers
+        const sortedFiles = allFiles.sort((a, b) => {
+            const dirA = path.dirname(a).split(path.sep)[0];
+            const dirB = path.dirname(b).split(path.sep)[0];
+            const indexA = importOrder.indexOf(dirA);
+            const indexB = importOrder.indexOf(dirB);
+
+            // Si le dossier n'est pas dans l'ordre, le mettre à la fin
+            const orderA = indexA === -1 ? 999 : indexA;
+            const orderB = indexB === -1 ? 999 : indexB;
+
+            if (orderA !== orderB) return orderA - orderB;
+            return a.localeCompare(b);
         });
-    });
+
+        const importStatements = sortedFiles.map(file => {
+            // Enlever l'extension .scss et le underscore pour @use
+            const importPath = file.replace(/\.scss$/, '').replace(/\\/g, '/');
+            return `@import '${importPath}';`;
+        }).join('\n');
+
+        fs.writeFileSync(outputFile, importStatements);
+        console.log('Fichier all.scss généré avec succès.');
+        console.log('Fichiers importés:', sortedFiles);
+        done();
+    } catch (err) {
+        console.error('Erreur lors de la génération:', err);
+        done(err);
+    }
 }
 
 function buildStyles() {

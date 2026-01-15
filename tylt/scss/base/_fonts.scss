@@ -1,0 +1,152 @@
+// ==========================================================================
+// Fonts - Dwight Family
+// ==========================================================================
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-Thin.otf') format('opentype');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-ThinItalic.otf') format('opentype');
+  font-weight: 100;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-ExtraLight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-ExtraLightItalic.otf') format('opentype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-MediumItalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-SemiBoldItalic.otf') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dwight';
+  src: url('Dwight-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+// ==========================================================================
+// Font Variables
+// ==========================================================================
+
+$font-dwight: 'Dwight', sans-serif;
+
+// ==========================================================================
+// Override Shopify theme fonts
+// ==========================================================================
+
+// Force font-family sur tous les éléments
+html,
+body,
+h1, h2, h3, h4, h5, h6,
+p, span, a, li, label,
+input, textarea, select, button,
+.btn, .button {
+  font-family: $font-dwight !important;
+}
+
+// Fallback universel
+* {
+  --font-body--family: 'Dwight', sans-serif;
+  --font-heading--family: 'Dwight', sans-serif;
+  --font-accent--family: 'Dwight', sans-serif;
+  --font-subheading--family: 'Dwight', sans-serif;
+  --font-paragraph--family: 'Dwight', sans-serif;
+  --font-h1--family: 'Dwight', sans-serif;
+  --font-h2--family: 'Dwight', sans-serif;
+  --font-h3--family: 'Dwight', sans-serif;
+  --font-h4--family: 'Dwight', sans-serif;
+  --font-h5--family: 'Dwight', sans-serif;
+  --font-h6--family: 'Dwight', sans-serif;
+  --button-font-family-primary: 'Dwight', sans-serif;
+  --button-font-family-secondary: 'Dwight', sans-serif;
+}
