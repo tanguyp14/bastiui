@@ -99,7 +99,7 @@
               "type": "contact-form-submit-button",
               "static": true,
               "settings": {
-                "label": "Envoyer",
+                "label": "ENVOYER",
                 "style_class": "button",
                 "width": "custom",
                 "custom_width": 100,
