@@ -1,0 +1,19 @@
+.menu-list__list-item {
+    a {
+        &:hover {
+            span {
+                background-color: white;
+                color: black;
+                border: var(--color-input-border) solid 1px;
+                letter-spacing: 0.5pt;
+            }
+        }
+
+        span {
+            border: 1px solid transparent;
+            border-radius: 100px;
+            padding: 2px 15px;
+            transition: all 0.3s ease;
+        }
+    }
+}
