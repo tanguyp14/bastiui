@@ -412,13 +412,13 @@
           ]
         }
       },
-      "name": "Mugs",
+      "name": "Goodies",
       "settings": {
-        "collection": "mugs",
+        "collection": "goodies",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 8,
-        "columns": 4,
+        "columns": 5,
         "mobile_columns": "1",
         "mobile_card_size": "60cqw",
         "columns_gap": 8,
@@ -606,6 +606,7 @@
           ]
         }
       },
+      "disabled": true,
       "name": "Stickers",
       "settings": {
         "collection": "stickers",
@@ -800,6 +801,7 @@
           ]
         }
       },
+      "disabled": true,
       "name": "Porte clés",
       "settings": {
         "collection": "porte-cles",
