@@ -151,29 +151,12 @@
     "footer_utilities_jLGE8U": {
       "type": "footer-utilities",
       "blocks": {
-        "footer_copyright_jweRK8": {
-          "type": "footer-copyright",
-          "settings": {
-            "show_powered_by": true,
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
-        "footer_policy_list_VCdnpa": {
-          "type": "footer-policy-list",
-          "settings": {
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
         "social_links_Ew63Kq": {
           "type": "social-links",
           "settings": {
-            "facebook_url": "https://www.facebook.com/",
+            "facebook_url": "",
             "instagram_url": "https://www.instagram.com/",
-            "youtube_url": "https://www.youtube.com/",
+            "youtube_url": "https://youtube.com/c/BastiUI",
             "tiktok_url": "https://www.tiktok.com/",
             "twitter_url": "https://x.com/",
             "threads_url": "",
@@ -186,12 +169,29 @@
             "custom_url": ""
           },
           "blocks": {}
+        },
+        "footer_policy_list_VCdnpa": {
+          "type": "footer-policy-list",
+          "settings": {
+            "font_size": "0.75rem",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "footer_copyright_jweRK8": {
+          "type": "footer-copyright",
+          "settings": {
+            "show_powered_by": false,
+            "font_size": "0.75rem",
+            "case": "none"
+          },
+          "blocks": {}
         }
       },
       "block_order": [
-        "footer_copyright_jweRK8",
+        "social_links_Ew63Kq",
         "footer_policy_list_VCdnpa",
-        "social_links_Ew63Kq"
+        "footer_copyright_jweRK8"
       ],
       "name": "t:names.utilities",
       "settings": {
