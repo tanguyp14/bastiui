@@ -86,7 +86,7 @@
               "type": "_product-list-text",
               "name": "t:names.collection_title",
               "settings": {
-                "text": "<p>Les t-shits</p>",
+                "text": "<p>{{ closest.collection.title }}</p>",
                 "width": "fit-content",
                 "max_width": "normal",
                 "alignment": "left",
@@ -112,7 +112,7 @@
               "type": "_product-list-button",
               "name": "t:names.product_list_button",
               "settings": {
-                "label": "View all",
+                "label": "Voir tout",
                 "open_in_new_tab": false,
                 "style_class": "link",
                 "width": "fit-content",
