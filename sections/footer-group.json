@@ -170,6 +170,19 @@
           },
           "blocks": {}
         },
+        "footer_text_with_links_QhEmzA": {
+          "type": "footer-text-with-links",
+          "name": "t:names.text_with_links",
+          "settings": {
+            "text": "Text content",
+            "link_url": "",
+            "font_size": "0.75rem",
+            "font_style": "normal",
+            "text_transform": "none",
+            "text_weight": "normal"
+          },
+          "blocks": {}
+        },
         "footer_copyright_jweRK8": {
           "type": "footer-copyright",
           "settings": {
@@ -182,6 +195,7 @@
       },
       "block_order": [
         "social_links_Ew63Kq",
+        "footer_text_with_links_QhEmzA",
         "footer_copyright_jweRK8"
       ],
       "name": "t:names.utilities",
