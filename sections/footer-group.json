@@ -11,6 +11,61 @@
   "type": "footer",
   "name": "Footer",
   "sections": {
+    "footer_utilities_D9H6Mf": {
+      "type": "footer-utilities",
+      "blocks": {
+        "footer_copyright_QpVJLg": {
+          "type": "footer-copyright",
+          "settings": {
+            "show_powered_by": true,
+            "font_size": "0.75rem",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "footer_policy_list_VTgxr9": {
+          "type": "footer-policy-list",
+          "settings": {
+            "font_size": "0.75rem",
+            "case": "none"
+          },
+          "blocks": {}
+        },
+        "social_links_e3MXTN": {
+          "type": "social-links",
+          "settings": {
+            "facebook_url": "",
+            "instagram_url": "",
+            "youtube_url": "",
+            "tiktok_url": "",
+            "twitter_url": "",
+            "threads_url": "",
+            "linkedin_url": "",
+            "bluesky_url": "",
+            "snapchat_url": "",
+            "pinterest_url": "",
+            "tumblr_url": "",
+            "vimeo_url": "",
+            "custom_url": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "footer_copyright_QpVJLg",
+        "footer_policy_list_VTgxr9",
+        "social_links_e3MXTN"
+      ],
+      "name": "t:names.policies_and_links",
+      "settings": {
+        "section_width": "page-width",
+        "gap": 24,
+        "divider_thickness": 1,
+        "color_scheme": "",
+        "padding-block-start": 20,
+        "padding-block-end": 20
+      }
+    },
     "footer_m9NzUG": {
       "type": "footer",
       "blocks": {
@@ -174,8 +229,7 @@
           "type": "footer-text-with-links",
           "name": "t:names.text_with_links",
           "settings": {
-            "text": "Text content",
-            "link_url": "",
+            "rich_text": "<p>Tous droits réservés- Site développé par <a href=\"https://le-tengu.fr/\" target=\"_blank\">A3PROD </a>- RGPD - CGU / CGV</p>",
             "font_size": "0.75rem",
             "font_style": "normal",
             "text_transform": "none",
@@ -211,6 +265,7 @@
   },
   "order": [
     "footer_m9NzUG",
+    "footer_utilities_D9H6Mf",
     "footer_utilities_jLGE8U"
   ]
 }
