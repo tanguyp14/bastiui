@@ -1,0 +1,149 @@
+{% assign block_settings = block.settings %}
+<div
+  class="
+    footer-utilities__text-with-links
+    custom-typography
+    footer-utilities__text
+    {% if block_settings.font_size != "" %}custom-font-size{% endif %}
+  "
+  style="{% render 'typography-style', preset: 'custom', settings: block_settings %}"
+  {{ block.shopify_attributes }}
+>
+  {% if block_settings.link_url != blank %}
+    <a href="{{ block_settings.link_url }}" class="footer-utilities__text">
+      {{ block_settings.text }}
+    </a>
+  {% else %}
+    <span class="footer-utilities__text">
+      {{ block_settings.text }}
+    </span>
+  {% endif %}
+</div>
+
+{% stylesheet %}
+  .footer-utilities__text-with-links {
+    a {
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--color-foreground);
+        outline-offset: 2px;
+      }
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "t:names.text_with_links",
+  "tag": null,
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": "t:settings.text",
+      "placeholder": "Enter your text here",
+      "default": "Text content"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "t:settings.link_url",
+      "placeholder": "https://example.com"
+    },
+    {
+      "type": "select",
+      "id": "font_size",
+      "label": "t:settings.size",
+      "options": [
+        {
+          "value": "0.625rem",
+          "label": "10px"
+        },
+        {
+          "value": "0.75rem",
+          "label": "12px"
+        },
+        {
+          "value": "0.875rem",
+          "label": "14px"
+        },
+        {
+          "value": "1rem",
+          "label": "16px"
+        },
+        {
+          "value": "1.125rem",
+          "label": "18px"
+        },
+        {
+          "value": "1.25rem",
+          "label": "20px"
+        }
+      ],
+      "default": ""
+    },
+    {
+      "type": "select",
+      "id": "font_style",
+      "label": "t:settings.font_style",
+      "options": [
+        {
+          "value": "normal",
+          "label": "t:options.normal"
+        },
+        {
+          "value": "italic",
+          "label": "t:options.italic"
+        }
+      ],
+      "default": "normal"
+    },
+    {
+      "type": "select",
+      "id": "text_transform",
+      "label": "t:settings.text_transform",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:options.none"
+        },
+        {
+          "value": "uppercase",
+          "label": "t:options.uppercase"
+        },
+        {
+          "value": "capitalize",
+          "label": "t:options.capitalize"
+        }
+      ],
+      "default": "none"
+    },
+    {
+      "type": "select",
+      "id": "text_weight",
+      "label": "t:settings.text_weight",
+      "options": [
+        {
+          "value": "normal",
+          "label": "t:options.normal"
+        },
+        {
+          "value": "600",
+          "label": "t:options.semi_bold"
+        },
+        {
+          "value": "bold",
+          "label": "t:options.bold"
+        }
+      ],
+      "default": "normal"
+    }
+  ]
+}
+{% endschema %}
