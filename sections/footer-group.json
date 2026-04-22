@@ -170,14 +170,6 @@
           },
           "blocks": {}
         },
-        "footer_policy_list_VCdnpa": {
-          "type": "footer-policy-list",
-          "settings": {
-            "font_size": "0.75rem",
-            "case": "none"
-          },
-          "blocks": {}
-        },
         "footer_copyright_jweRK8": {
           "type": "footer-copyright",
           "settings": {
@@ -190,7 +182,6 @@
       },
       "block_order": [
         "social_links_Ew63Kq",
-        "footer_policy_list_VCdnpa",
         "footer_copyright_jweRK8"
       ],
       "name": "t:names.utilities",
