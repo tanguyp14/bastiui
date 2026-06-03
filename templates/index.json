@@ -988,10 +988,9 @@
           ]
         }
       },
-      "disabled": true,
       "name": "Porte clés",
       "settings": {
-        "collection": "porte-cles",
+        "collection": "frontpage",
         "layout_type": "grid",
         "carousel_on_mobile": false,
         "max_products": 8,
@@ -1231,6 +1230,7 @@
           ]
         }
       },
+      "disabled": true,
       "name": "t:names.featured_product_information",
       "settings": {
         "product": "caqquette",
