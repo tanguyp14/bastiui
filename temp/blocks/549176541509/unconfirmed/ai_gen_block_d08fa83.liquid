@@ -1,0 +1,455 @@
+{% doc %}
+  @prompt
+    Une galerie défilante de plusieurs photos, Peut-être fait une bloc répétable avec une image par bloc, faire en sorte que la case de l'image s'adapte à la largeur de l'image de base (flexible quoi)
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-flexible-gallery-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    display: block;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-flexible-gallery__wrapper-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.gap }}px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: {{ block.settings.padding_vertical }}px 0;
+    align-items: {{ block.settings.vertical_alignment }};
+  }
+
+  .ai-flexible-gallery__wrapper-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-flexible-gallery__item-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    position: relative;
+    max-height: {{ block.settings.max_height }}px;
+  }
+
+  .ai-flexible-gallery__item-{{ ai_gen_id }} img {
+    height: {{ block.settings.max_height }}px;
+    width: auto;
+    display: block;
+    object-fit: contain;
+  }
+
+  .ai-flexible-gallery__placeholder-{{ ai_gen_id }} {
+    width: {{ block.settings.placeholder_width }}px;
+    height: {{ block.settings.max_height }}px;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .ai-flexible-gallery__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-flexible-gallery__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .ai-flexible-gallery__controls-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: {{ block.settings.controls_spacing }}px;
+  }
+
+  .ai-flexible-gallery__button-{{ ai_gen_id }} {
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_color }};
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-flexible-gallery__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_color }};
+  }
+
+  .ai-flexible-gallery__button-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-flexible-gallery__item-{{ ai_gen_id }} img {
+      height: {{ block.settings.max_height_mobile }}px;
+    }
+
+    .ai-flexible-gallery__placeholder-{{ ai_gen_id }} {
+      height: {{ block.settings.max_height_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<flexible-gallery-{{ ai_gen_id }} class="ai-flexible-gallery-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-flexible-gallery__wrapper-{{ ai_gen_id }}" data-gallery-wrapper>
+    {% assign has_images = false %}
+    {% for i in (1..12) %}
+      {% liquid
+        assign image_key = 'image_' | append: i
+        assign image = block.settings[image_key]
+      %}
+      
+      {% if image != blank %}
+        {% assign has_images = true %}
+        <div class="ai-flexible-gallery__item-{{ ai_gen_id }}">
+          <img
+            src="{{ image | image_url: width: 1200 }}"
+            alt="{{ image.alt | escape }}"
+            loading="lazy"
+            width="{{ image.width }}"
+            height="{{ image.height }}"
+          >
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    {% unless has_images %}
+      {% for i in (1..3) %}
+        <div class="ai-flexible-gallery__placeholder-{{ ai_gen_id }}">
+          {{ 'image' | placeholder_svg_tag }}
+          <div class="ai-flexible-gallery__empty-state-{{ ai_gen_id }}">
+            Ajouter des images
+          </div>
+        </div>
+      {% endfor %}
+    {% endunless %}
+  </div>
+
+  {% if block.settings.show_controls %}
+    <div class="ai-flexible-gallery__controls-{{ ai_gen_id }}">
+      <button class="ai-flexible-gallery__button-{{ ai_gen_id }}" data-scroll-left aria-label="Précédent">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="ai-flexible-gallery__button-{{ ai_gen_id }}" data-scroll-right aria-label="Suivant">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+</flexible-gallery-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class FlexibleGallery{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.wrapper = this.querySelector('[data-gallery-wrapper]');
+        this.leftButton = this.querySelector('[data-scroll-left]');
+        this.rightButton = this.querySelector('[data-scroll-right]');
+        
+        if (this.leftButton && this.rightButton) {
+          this.setupEventListeners();
+        }
+      }
+
+      setupEventListeners() {
+        this.leftButton.addEventListener('click', () => {
+          this.scroll('left');
+        });
+
+        this.rightButton.addEventListener('click', () => {
+          this.scroll('right');
+        });
+      }
+
+      scroll(direction) {
+        const scrollAmount = this.wrapper.offsetWidth * 0.8;
+        
+        if (direction === 'left') {
+          this.wrapper.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+          });
+        } else {
+          this.wrapper.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }
+
+    customElements.define('flexible-gallery-{{ ai_gen_id }}', FlexibleGallery{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Galerie flexible",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_7",
+      "label": "Image 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_8",
+      "label": "Image 8"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_9",
+      "label": "Image 9"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_10",
+      "label": "Image 10"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_11",
+      "label": "Image 11"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_12",
+      "label": "Image 12"
+    },
+    {
+      "type": "header",
+      "content": "Disposition"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Largeur bureau",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "max_height",
+      "label": "Hauteur maximale bureau",
+      "min": 200,
+      "max": 800,
+      "step": 20,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "max_height_mobile",
+      "label": "Hauteur maximale mobile",
+      "min": 150,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "placeholder_width",
+      "label": "Largeur placeholder",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 300
+    },
+    {
+      "type": "select",
+      "id": "vertical_alignment",
+      "label": "Alignement vertical",
+      "options": [
+        {
+          "value": "flex-start",
+          "label": "Haut"
+        },
+        {
+          "value": "center",
+          "label": "Centre"
+        },
+        {
+          "value": "flex-end",
+          "label": "Bas"
+        }
+      ],
+      "default": "center"
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacement entre images",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Espacement vertical",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Arrondi des coins",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Contrôles"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Afficher les boutons",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "controls_spacing",
+      "label": "Espacement des boutons",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Fond bouton",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Couleur bouton",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Bordure bouton",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Épaisseur bordure",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Arrondi bouton",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Fond bouton survol",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Couleur bouton survol",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Galerie flexible"
+    }
+  ],
+  "tag": null
+}
+{% endschema %}
