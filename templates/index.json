@@ -1134,7 +1134,7 @@
       ],
       "name": "t:names.product_recommendations",
       "settings": {
-        "product": "{{ closest.product }}",
+        "product": "caqquette",
         "recommendation_type": "related",
         "layout_type": "grid",
         "carousel_on_mobile": false,
