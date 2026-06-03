@@ -1,6 +1,417 @@
+{% doc %}
+  @prompt
+    Une galerie défilante de plusieurs photos
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-scrolling-gallery-{{ ai_gen_id }} {
+    width: {{ block.settings.desktop_width_percent }}%;
+    max-width: 100%;
+    display: block;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-scrolling-gallery__wrapper-{{ ai_gen_id }} {
+    display: flex;
+    gap: {{ block.settings.gap }}px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: {{ block.settings.padding_vertical }}px 0;
+  }
+
+  .ai-scrolling-gallery__wrapper-{{ ai_gen_id }}::-webkit-scrollbar {
+    display: none;
+  }
+
+  .ai-scrolling-gallery__item-{{ ai_gen_id }} {
+    flex-shrink: 0;
+    width: {{ block.settings.image_width }}px;
+    height: {{ block.settings.image_height }}px;
+    border-radius: {{ block.settings.border_radius }}px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-scrolling-gallery__item-{{ ai_gen_id }} img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .ai-scrolling-gallery__placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .ai-scrolling-gallery__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-scrolling-gallery__empty-state-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 12px;
+    color: #666;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .ai-scrolling-gallery__controls-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: {{ block.settings.controls_spacing }}px;
+  }
+
+  .ai-scrolling-gallery__button-{{ ai_gen_id }} {
+    background-color: {{ block.settings.button_background }};
+    color: {{ block.settings.button_color }};
+    border: {{ block.settings.button_border_width }}px solid {{ block.settings.button_border_color }};
+    border-radius: {{ block.settings.button_border_radius }}px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .ai-scrolling-gallery__button-{{ ai_gen_id }}:hover {
+    background-color: {{ block.settings.button_hover_background }};
+    color: {{ block.settings.button_hover_color }};
+  }
+
+  .ai-scrolling-gallery__button-{{ ai_gen_id }} svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-scrolling-gallery__item-{{ ai_gen_id }} {
+      width: {{ block.settings.image_width_mobile }}px;
+      height: {{ block.settings.image_height_mobile }}px;
+    }
+  }
+{% endstyle %}
+
+<scrolling-gallery-{{ ai_gen_id }} class="ai-scrolling-gallery-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-scrolling-gallery__wrapper-{{ ai_gen_id }}" data-gallery-wrapper>
+    {% for i in (1..8) %}
+      {% liquid
+        assign image_key = 'image_' | append: i
+        assign image = block.settings[image_key]
+      %}
+      
+      {% if image != blank %}
+        <div class="ai-scrolling-gallery__item-{{ ai_gen_id }}">
+          <img
+            src="{{ image | image_url: width: 800 }}"
+            alt="{{ image.alt | escape }}"
+            loading="lazy"
+            width="{{ block.settings.image_width }}"
+            height="{{ block.settings.image_height }}"
+          >
+        </div>
+      {% else %}
+        <div class="ai-scrolling-gallery__item-{{ ai_gen_id }}">
+          <div class="ai-scrolling-gallery__placeholder-{{ ai_gen_id }}">
+            {{ 'image' | placeholder_svg_tag }}
+            <div class="ai-scrolling-gallery__empty-state-{{ ai_gen_id }}">
+              Ajouter une image
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+  {% if block.settings.show_controls %}
+    <div class="ai-scrolling-gallery__controls-{{ ai_gen_id }}">
+      <button class="ai-scrolling-gallery__button-{{ ai_gen_id }}" data-scroll-left aria-label="Précédent">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <button class="ai-scrolling-gallery__button-{{ ai_gen_id }}" data-scroll-right aria-label="Suivant">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+      </button>
+    </div>
+  {% endif %}
+</scrolling-gallery-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ScrollingGallery{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+      }
+
+      connectedCallback() {
+        this.wrapper = this.querySelector('[data-gallery-wrapper]');
+        this.leftButton = this.querySelector('[data-scroll-left]');
+        this.rightButton = this.querySelector('[data-scroll-right]');
+        
+        if (this.leftButton && this.rightButton) {
+          this.setupEventListeners();
+        }
+      }
+
+      setupEventListeners() {
+        this.leftButton.addEventListener('click', () => {
+          this.scroll('left');
+        });
+
+        this.rightButton.addEventListener('click', () => {
+          this.scroll('right');
+        });
+      }
+
+      scroll(direction) {
+        const scrollAmount = this.wrapper.offsetWidth * 0.8;
+        
+        if (direction === 'left') {
+          this.wrapper.scrollBy({
+            left: -scrollAmount,
+            behavior: 'smooth'
+          });
+        } else {
+          this.wrapper.scrollBy({
+            left: scrollAmount,
+            behavior: 'smooth'
+          });
+        }
+      }
+    }
+
+    customElements.define('scrolling-gallery-{{ ai_gen_id }}', ScrollingGallery{{ ai_gen_id }});
+  })();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Galerie défilante",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Images"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Image 2"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Image 3"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Image 4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_5",
+      "label": "Image 5"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_6",
+      "label": "Image 6"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_7",
+      "label": "Image 7"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_8",
+      "label": "Image 8"
+    },
+    {
+      "type": "header",
+      "content": "Disposition"
+    },
+    {
+      "type": "range",
+      "id": "desktop_width_percent",
+      "label": "Largeur bureau",
+      "min": 50,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 100
+    },
+    {
+      "type": "range",
+      "id": "image_width",
+      "label": "Largeur image bureau",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "image_height",
+      "label": "Hauteur image bureau",
+      "min": 200,
+      "max": 600,
+      "step": 20,
+      "unit": "px",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "image_width_mobile",
+      "label": "Largeur image mobile",
+      "min": 150,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "image_height_mobile",
+      "label": "Hauteur image mobile",
+      "min": 150,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "default": 280
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Espacement entre images",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "padding_vertical",
+      "label": "Espacement vertical",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "border_radius",
+      "label": "Arrondi des coins",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Contrôles"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_controls",
+      "label": "Afficher les boutons",
+      "default": true
+    },
+    {
+      "type": "range",
+      "id": "controls_spacing",
+      "label": "Espacement des boutons",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "color",
+      "id": "button_background",
+      "label": "Fond bouton",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Couleur bouton",
+      "default": "#000000"
+    },
+    {
+      "type": "color",
+      "id": "button_border_color",
+      "label": "Bordure bouton",
+      "default": "#e6e6e6"
+    },
+    {
+      "type": "range",
+      "id": "button_border_width",
+      "label": "Épaisseur bordure",
+      "min": 0,
+      "max": 4,
+      "step": 1,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "button_border_radius",
+      "label": "Arrondi bouton",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "button_hover_background",
+      "label": "Fond bouton survol",
+      "default": "#f5f5f5"
+    },
+    {
+      "type": "color",
+      "id": "button_hover_color",
+      "label": "Couleur bouton survol",
+      "default": "#000000"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Galerie défilante"
+    }
+  ],
+  "tag": null
+}
 {% endschema %}
