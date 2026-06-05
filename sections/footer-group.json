@@ -193,6 +193,7 @@
         "footer_policy_list_VTgxr9",
         "social_links_e3MXTN"
       ],
+      "disabled": true,
       "name": "t:names.policies_and_links",
       "settings": {
         "section_width": "page-width",
@@ -229,7 +230,7 @@
           "type": "footer-text-with-links",
           "name": "t:names.text_with_links",
           "settings": {
-            "rich_text": "<p>Tous droits réservés- Site développé par <a href=\"https://le-tengu.fr/\" target=\"_blank\">A3PROD </a>- <a href=\"https://boutique.bastiui.fr/policies/privacy-policy\" target=\"_blank\" title=\"https://boutique.bastiui.fr/policies/privacy-policy\">RGPD</a> - <a href=\"https://boutique.bastiui.fr/policies/terms-of-service\" target=\"_blank\" title=\"https://boutique.bastiui.fr/policies/terms-of-service\">CGU</a> / <a href=\"https://boutique.bastiui.fr/policies/terms-of-sale\" target=\"_blank\" title=\"https://boutique.bastiui.fr/policies/terms-of-sale\">CGV</a></p>",
+            "rich_text": "<p>Tous droits réservés- Site développé par <a href=\"https://a3prod.com/\" target=\"_blank\" title=\"https://a3prod.com/\">A3PROD </a>- <a href=\"https://boutique.bastiui.fr/policies/privacy-policy\" target=\"_blank\" title=\"https://boutique.bastiui.fr/policies/privacy-policy\">RGPD</a> - <a href=\"https://boutique.bastiui.fr/policies/terms-of-service\" target=\"_blank\" title=\"https://boutique.bastiui.fr/policies/terms-of-service\">CGU</a> / <a href=\"https://boutique.bastiui.fr/policies/terms-of-sale\" target=\"_blank\" title=\"https://boutique.bastiui.fr/policies/terms-of-sale\">CGV</a></p>",
             "font_size": "0.75rem",
             "font_style": "normal",
             "text_transform": "none",
